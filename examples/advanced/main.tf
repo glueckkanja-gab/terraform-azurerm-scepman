@@ -16,7 +16,8 @@ terraform {
 
 provider "azurerm" {
   features {}
-  partner_id = "a262352f-52a9-4ed9-a9ba-6a2b2478d19b"
+  partner_id      = "a262352f-52a9-4ed9-a9ba-6a2b2478d19b"
+  subscription_id = var.subscription_id
 }
 
 # Resources
@@ -44,6 +45,7 @@ module "scepman" {
   key_vault_name       = var.key_vault_name
   law_name             = var.law_name
 
+  service_plan_os_type                = var.service_plan_os_type
   service_plan_name                   = var.service_plan_name
   app_service_name_primary            = var.app_service_name_primary
   app_service_name_certificate_master = var.app_service_name_certificate_master
