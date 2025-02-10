@@ -98,6 +98,12 @@ variable "key_vault_name" {
   description = "Name of the key vault"
 }
 
+variable "key_vault_use_rbac" {
+  type        = bool
+  default     = true
+  description = "Use RBAC for the key vault or the older access policies"
+}
+
 variable "vnet_name" {
   type        = string
   default     = "vnet-scepman"
