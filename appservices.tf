@@ -267,7 +267,6 @@ resource "azurerm_linux_web_app" "app" {
       #current_stack  = "dotnet"
       dotnet_version = "8.0"
     }
-    app_command_line = "./Scepman.Server"
   }
 
   app_settings = lower(var.service_plan_os_type) == "linux" ? { for k, v in local.app_settings_primary : replace(k, ":", "__") => v } : local.app_settings_primary
