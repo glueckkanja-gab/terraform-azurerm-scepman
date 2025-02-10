@@ -114,7 +114,7 @@ resource "azurerm_key_vault" "vault" {
 
   tenant_id                 = data.azurerm_client_config.current.tenant_id
   sku_name                  = "premium"
-  enable_rbac_authorization = false
+  enable_rbac_authorization = var.key_vault_use_rbac
 
   enabled_for_disk_encryption     = false
   enabled_for_deployment          = false
@@ -423,6 +423,8 @@ resource "azurerm_windows_web_app" "app_cm" {
 # Key Vault Access Policy
 
 resource "azurerm_key_vault_access_policy" "scepman" {
+  count = azurerm_key_vault.vault.enable_rbac_authorization ? 0 : 1
+
   key_vault_id = azurerm_key_vault.vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = azurerm_windows_web_app.app.identity[0].principal_id
@@ -447,6 +449,22 @@ resource "azurerm_key_vault_access_policy" "scepman" {
     "Set",
     "Delete"
   ]
+}
+
+locals {
+  key_vault_roles = {
+    "Key Vault Crypto Officer" = "kv_crypto_officer"
+    "Key Vault Certificates Officer" = "kv_certificates_officer"
+    "Key Vault Secrets User" = "kv_secrets_user"
+  }
+}
+
+resource "azurerm_role_assignment" "kv_roles" {
+  for_each = azurerm_key_vault.vault.enable_rbac_authorization ? local.key_vault_roles : {}
+
+  scope               = azurerm_key_vault.vault.id
+  role_definition_name = each.key
+  principal_id        = azurerm_windows_web_app.app.identity[0].principal_id
 }
 
 # Role Assignment - Storage Table Data Contributor
