@@ -1,5 +1,48 @@
-# App Service Plan
+# Artifacts URL
+locals {
+  # Base URL for the artifacts hosted by GK
+  gk_github_artifact_base  = "https://raw.githubusercontent.com/scepman/install/master/dist"
+  gk_vanity_artifacts_base = "https://install.scepman.com/dist"
 
+  # If the artifacts URL is hosted by GK, we need to adjust the URL based on the OS. Self-hosted Artifacts are not adjusted, User is responsible for correct URL then.
+  # Process primary artifact URL with nested replaces
+  artifacts_url_primary = (
+    startswith(var.artifacts_url_primary, local.gk_github_artifact_base) ||
+    startswith(var.artifacts_url_primary, local.gk_vanity_artifacts_base)
+    ) ? (
+    lower(var.service_plan_os_type) == "linux"
+    ? replace(
+      replace(
+        replace(var.artifacts_url_primary, "Artifacts-Intern.zip", "Artifacts-Linux-Internal.zip"),
+        "Artifacts-Beta.zip",
+        "Artifacts-Linux-Beta.zip"
+      ),
+      "Artifacts.zip",
+      "Artifacts-Linux.zip"
+    )
+    : replace(var.artifacts_url_primary, "-Linux", "")
+  ) : var.artifacts_url_primary
+
+  # Process certificate master artifact URL with nested replaces
+  artifacts_url_certificate_master = (
+    startswith(var.artifacts_url_certificate_master, local.gk_github_artifact_base) ||
+    startswith(var.artifacts_url_certificate_master, local.gk_vanity_artifacts_base)
+    ) ? (
+    lower(var.service_plan_os_type) == "linux"
+    ? replace(
+      replace(
+        replace(var.artifacts_url_certificate_master, "CertMaster-Artifacts-Intern.zip", "CertMaster-Artifacts-Linux-Internal.zip"),
+        "CertMaster-Artifacts-Beta.zip",
+        "CertMaster-Artifacts-Linux-Beta.zip"
+      ),
+      "CertMaster-Artifacts.zip",
+      "CertMaster-Artifacts-Linux.zip"
+    )
+    : replace(var.artifacts_url_certificate_master, "-Linux", "")
+  ) : var.artifacts_url_certificate_master
+}
+
+# App Service Plan
 resource "azurerm_service_plan" "plan" {
   count = var.service_plan_resource_id == null ? 1 : 0
 
@@ -49,13 +92,6 @@ locals {
     "XDT_MicrosoftApplicationInsights_Mode"           = "recommended"
   } : {}
 
-  artifacts_url_primary = lower(var.service_plan_os_type) == "linux" ? (
-    replace(
-      replace(var.artifacts_url_primary, "Artifacts-Beta.zip", "Artifacts-Linux-Beta.zip"),
-      "Artifacts.zip", "Artifacts-Linux.zip"
-    )
-  ) : var.artifacts_url_primary
-
   app_settings_primary_base = {
     "WEBSITE_RUN_FROM_PACKAGE"                          = local.artifacts_url_primary
     "AppConfig:BaseUrl"                                 = format("https://%s.azurewebsites.net", var.app_service_name_primary)
@@ -96,12 +132,6 @@ locals {
 
   app_settings_primary_url = format("https://%s", lower(var.service_plan_os_type) == "linux" ? azurerm_linux_web_app.app[0].default_hostname : azurerm_windows_web_app.app[0].default_hostname)
 
-  artifacts_url_certificate_master = lower(var.service_plan_os_type) == "linux" ? (
-    replace(
-      replace(var.artifacts_url_certificate_master, "CertMaster-Artifacts-Beta.zip", "CertMaster-Artifacts-Linux-Beta.zip"),
-      "CertMaster-Artifacts.zip", "CertMaster-Artifacts-Linux.zip"
-    )
-  ) : var.artifacts_url_certificate_master
 
   app_settings_certificate_master_base = {
     "WEBSITE_RUN_FROM_PACKAGE"                    = local.artifacts_url_certificate_master
@@ -355,10 +385,10 @@ resource "azurerm_linux_web_app" "app_cm" {
   lifecycle {
 
     ignore_changes = [
-      app_settings["AppConfig_AuthConfig_ApplicationId"],
-      app_settings["AppConfig_AuthConfig_ManagedIdentityEnabledOnUnixTime"],
-      app_settings["AppConfig_AuthConfig_ManagedIdentityPermissionLevel"],
-      app_settings["AppConfig_AuthConfig_SCEPmanAPIScope"],
+      app_settings["AppConfig__AuthConfig__ApplicationId"],
+      app_settings["AppConfig__AuthConfig__ManagedIdentityEnabledOnUnixTime"],
+      app_settings["AppConfig__AuthConfig__ManagedIdentityPermissionLevel"],
+      app_settings["AppConfig__AuthConfig__SCEPmanAPIScope"],
       app_settings["WEBSITE_HEALTHCHECK_MAXPINGFAILURES"],
       sticky_settings
     ]
