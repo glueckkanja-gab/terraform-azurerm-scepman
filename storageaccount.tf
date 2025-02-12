@@ -23,7 +23,8 @@ resource "azurerm_storage_account" "storage" {
 # Role Assignment - Storage Table Data Contributor
 
 locals {
-  object_ids = lower(var.service_plan_os_type) == "linux" ? { for key, item in [azurerm_linux_web_app.app[0], azurerm_linux_web_app.app_cm[0]] : key => item.identity[0].principal_id } : { for key, item in [azurerm_windows_web_app.app[0], azurerm_windows_web_app.app_cm[0]] : key => item.identity[0].principal_id }
+  app_services = lower(var.service_plan_os_type) == "linux" ? [azurerm_linux_web_app.app[0], azurerm_linux_web_app.app_cm[0]] : [azurerm_windows_web_app.app[0], azurerm_windows_web_app.app_cm[0]]
+  object_ids = { for key, item in local.app_services : key => item.identity[0].principal_id }
 }
 
 resource "azurerm_role_assignment" "table_contributor" {
