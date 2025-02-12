@@ -90,6 +90,7 @@ module "scepman" {
   key_vault_name       = var.key_vault_name
   law_name             = var.law_name
 
+  service_plan_os_type                = "Windows"
   service_plan_name                   = var.service_plan_name
   app_service_name_primary            = var.app_service_name_primary
   app_service_name_certificate_master = var.app_service_name_certificate_master
@@ -121,6 +122,7 @@ module "scepman" {
 | <a name="input_location"></a> [location](#input\_location)                                                                                          | Azure Region where the resources should be created                        | `string`      | n/a                                                                                                   |   yes    |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)                                                     | Name of the resource group                                                | `string`      | n/a                                                                                                   |   yes    |
 | <a name="input_service_plan_name"></a> [service\_plan\_name](#input\_service\_plan\_name)                                                           | Name of the service plan                                                  | `string`      | n/a                                                                                                   |   yes    |
+| <a name="input_service_plan_os_type"></a> [service\_plan\_os_type](#input\_service\_plan\_os_type)                                                              | OS of the service plan. Either "Windows" or "Linux"                                                   | `string`      | `Windows`                                                                                                  |    no    |
 | <a name="input_service_plan_sku"></a> [service\_plan\_sku](#input\_service\_plan\_sku)                                                              | SKU of the service plan                                                   | `string`      | `S1`                                                                                                  |    no    |
 | <a name="input_service_plan_resource_id"></a> [service\_plan\_resource\_id](#input\_service\_plan\_resource\_id)                                    | Resource ID of the service plan                                           | `string`      | `null`                                                                                                |    no    |
 | <a name="input_storage_account_name"></a> [storage\_account\_name](#input\_storage\_account\_name)                                                  | Name of the storage account                                               | `string`      | n/a                                                                                                   |   yes    |
