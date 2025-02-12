@@ -41,6 +41,16 @@ variable "service_plan_sku" {
   description = "SKU for App Service Plan"
 }
 
+variable "service_plan_os_type" {
+  type    = string
+  default = "Windows"
+  validation {
+    condition     = can(regex("Windows|Linux", var.service_plan_os_type))
+    error_message = "service_plan_os_type must be either 'Windows' or 'Linux'"
+  }
+  description = "The type of operating system to use for the app service plan. Possible values are 'Windows' or 'Linux'."
+}
+
 variable "service_plan_resource_id" {
   type        = string
   default     = null
