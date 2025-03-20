@@ -72,6 +72,11 @@ locals {
     "AppConfig:KeyVaultConfig:RootCertificateConfig:CertificateName" = "SCEPman-Root-CA-V1",
     "AppConfig:KeyVaultConfig:RootCertificateConfig:KeyType"         = "RSA-HSM"
     "AppConfig:ValidityClockSkewMinutes"                             = "1440",
+    "AppConfig:OCSP:UseAuthorizedResponder"                          = "true",
+    "AppConfig:EnableCertificateStorage"                             = "true",
+    "AppConfig:CRL:Source"                                           = "Storage",
+    "AppConfig:DbCSRValidation:ReenrollmentAllowedCertificateTypes"  = "Static",
+    "AppConfig:KeyVaultConfig:RootCertificateConfig:KeySize"         = "4096",
     "AppConfig:KeyVaultConfig:RootCertificateConfig:Subject"         = format("CN=SCEPman-Root-CA-V1,OU=%s,O=\"%s\"", data.azurerm_client_config.current.tenant_id, var.organization_name)
   }
 
