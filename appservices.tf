@@ -175,6 +175,7 @@ resource "azurerm_windows_web_app" "app" {
     health_check_path                 = "/probe"
     health_check_eviction_time_in_min = 10
     use_32_bit_worker                 = false
+    minimum_tls_version               = var.app_service_minimum_tls_version
     application_stack {
       current_stack  = "dotnet"
       dotnet_version = "v8.0"
@@ -238,6 +239,7 @@ resource "azurerm_windows_web_app" "app_cm" {
     health_check_path                 = "/probe"
     health_check_eviction_time_in_min = 10
     use_32_bit_worker                 = false
+    minimum_tls_version               = var.app_service_minimum_tls_version
     application_stack {
       current_stack  = "dotnet"
       dotnet_version = "v8.0"
@@ -298,6 +300,7 @@ resource "azurerm_linux_web_app" "app" {
     health_check_path                 = "/probe"
     health_check_eviction_time_in_min = 10
     use_32_bit_worker                 = false
+    minimum_tls_version               = var.app_service_minimum_tls_version
     application_stack {
       #current_stack  = "dotnet"
       dotnet_version = "8.0"
@@ -361,6 +364,7 @@ resource "azurerm_linux_web_app" "app_cm" {
     health_check_path                 = "/probe"
     health_check_eviction_time_in_min = 10
     use_32_bit_worker                 = false
+    minimum_tls_version               = var.app_service_minimum_tls_version
     application_stack {
       #  current_stack  = "dotnet"
       dotnet_version = "8.0"
