@@ -8,6 +8,16 @@ terraform {
   required_version = ">= 1.3"
 }
 
+resource "null_resource" "deprecation_warning" {
+  provisioner "local-exec" {
+    command = "echo 'WARNING: This Terraform module is deprecated and may be removed in future releases. Please use the successor module: https://registry.terraform.io/modules/scepman/scepman/'"
+  }
+}
+
+output "deprecation_warning" {
+  value = "WARNING: This Terraform module is deprecated and may be removed in future releases. Please use the successor module: https://registry.terraform.io/modules/scepman/scepman/"
+}
+
 data "azurerm_client_config" "current" {}
 
 # Log Analytics Workspace
