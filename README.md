@@ -1,9 +1,3 @@
-
-> [!IMPORTANT]  
-> This Repo/Module was moved to another GitHub Org.  
-> If you have previously used glueckkanja-gab/scepman/azurerm as source, please switch to the new name:  
-> [scepman/scepman/azurerm](https://registry.terraform.io/modules/scepman/scepman/azurerm/latest)  
-
 # SCEPman - Certificates Simplified
 
 [SCEPman Docs](https://docs.scepman.com)
@@ -50,7 +44,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.102.0"
+      version = ">= 4.8"
     }
   }
   backend "local" {}
