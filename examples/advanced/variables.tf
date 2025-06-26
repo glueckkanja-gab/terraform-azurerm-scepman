@@ -166,13 +166,24 @@ variable "app_settings_certificate_master" {
   description = "A mapping of app settings to assign to the certificate master app service"
 }
 
-variable "app_service_minimum_tls_version" {
+variable "app_service_minimum_tls_version_scepman" {
   type        = string
-  default     = "1.3"
-  description = "Minimum Inbound TLS Version"
+  default     = "1.2"
+  description = "Minimum Inbound TLS Version for SCEPman core App Service"
 
   validation {
-    condition     = contains(["1.0", "1.1", "1.2", "1.3"], var.app_service_minimum_tls_version)
+    condition     = contains(["1.0", "1.1", "1.2", "1.3"], var.app_service_minimum_tls_version_scepman)
+    error_message = "The TLS version must be one of: 1.0, 1.1, 1.2, or 1.3."
+  }
+}
+
+variable "app_service_minimum_tls_version_certificate_master" {
+  type        = string
+  default     = "1.3"
+  description = "Minimum Inbound TLS Version for Certificate Master App Service"
+
+  validation {
+    condition     = contains(["1.0", "1.1", "1.2", "1.3"], var.app_service_minimum_tls_version_certificate_master)
     error_message = "The TLS version must be one of: 1.0, 1.1, 1.2, or 1.3."
   }
 }
