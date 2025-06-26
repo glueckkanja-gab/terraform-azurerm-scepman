@@ -15,7 +15,7 @@ resource "azurerm_storage_account" "storage" {
   }
 
   account_tier             = "Standard"
-  account_replication_type = "LRS"
+  account_replication_type = var.storage_account_replication_type
 
   tags = var.tags
 }
@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "storage" {
 
 locals {
   app_services = lower(var.service_plan_os_type) == "linux" ? [azurerm_linux_web_app.app[0], azurerm_linux_web_app.app_cm[0]] : [azurerm_windows_web_app.app[0], azurerm_windows_web_app.app_cm[0]]
-  object_ids = { for key, item in local.app_services : key => item.identity[0].principal_id }
+  object_ids   = { for key, item in local.app_services : key => item.identity[0].principal_id }
 }
 
 resource "azurerm_role_assignment" "table_contributor" {
