@@ -19,6 +19,17 @@ variable "storage_account_name" {
   description = "Name of the storage account"
 }
 
+variable "storage_account_replication_type" {
+  type        = string
+  default     = "LRS"
+  description = "Storage account replication type. Valid options are LRS, ZRS, GRS, RAGRS, GZRS, RAGZRS."
+
+  validation {
+    condition     = contains(["LRS", "ZRS", "GRS", "RAGRS", "GZRS", "RAGZRS"], var.storage_account_replication_type)
+    error_message = "Storage account replication type must be one of: LRS, ZRS, GRS, RAGRS, GZRS, RAGZRS."
+  }
+}
+
 variable "law_name" {
   type        = string
   description = "Name for the Log Analytics Workspace"
